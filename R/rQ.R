@@ -23,6 +23,7 @@ rQ <- function(data) {
 
   if (length(dim(data)) != 0) {
     rlang::abort("Input vector is not one dimensional")
+    return (NULL)
   }
 
   data_length <- length(data)
