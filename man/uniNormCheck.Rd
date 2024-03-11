@@ -7,7 +7,7 @@
 uniNormCheck(data)
 }
 \arguments{
-\item{data}{1D input vector or list containing data}
+\item{data}{1D input vector containing numerical data}
 }
 \value{
 True if data is normal and False if data is not normal

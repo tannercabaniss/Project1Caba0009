@@ -4,7 +4,7 @@
 #' an empiral test and is not as accurate as functions like shapiro.test() which provides a more formal assessment of
 #' the data.
 #'
-#' @param data 1D input vector or list containing data
+#' @param data 1D input vector containing numerical data
 #'
 #' @return True if data is normal and False if data is not normal
 #' @export
@@ -22,9 +22,9 @@ uniNormCheck <- function (data) {
     rlang::abort("Input data must have length greater than 1")
   }
 
-  if ((is.vector(data) && length(dim(data)) == 0) || (is.list(data) && any(!sapply(data, is.list)))){
+  if (is.vector(data) && length(dim(data)) == 0){
     data_length <- length(data)
-    data_mean <- sum(data) / data_length
+    data_mean <- mean(data)
     data_std <- sd(data)
 
     xbar_1s <- c(data_mean - data_std, data_mean + data_std)
@@ -56,7 +56,7 @@ uniNormCheck <- function (data) {
     }
   }
   else {
-    rlang::abort("Input is not a 1 dimensional vector or list")
+    rlang::abort("Input is not a 1 dimensional vector")
     return (NULL)
   }
 }
