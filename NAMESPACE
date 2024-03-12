@@ -2,6 +2,7 @@
 
 export(QQplot)
 export(biNormCheck)
+export(mvNormCheck)
 export(rQ)
 export(uniNormCheck)
 importFrom(graphics,abline)

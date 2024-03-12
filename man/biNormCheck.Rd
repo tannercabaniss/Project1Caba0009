@@ -15,7 +15,8 @@ biNormCheck(data, prob)
 named list with plot of data and the actual vs predicted percentages of data within ellipse
 }
 \description{
-Bivariate Normality Check
+This function evaluates a bivariate data set for normality by observing the predicted and actual probabilities of
+containment within a predetermined contour of constant density.
 }
 \examples{
 vec1 <- rnorm(100)

@@ -34,10 +34,10 @@ QQplot <- function(data) {
 
   standard_normal_quantiles <- qnorm(prob_levels)
 
-  xlimit_max <- max(max(standard_normal_quantiles), abs(min(standard_normal_quantiles)))
+  xlimit_max <- max(max(standard_normal_quantiles), abs(min(standard_normal_quantiles))) + 0.5
   xlimit_min <- -xlimit_max
 
-  ylimit_max <- max(max(ordered_data), abs(min(ordered_data)))
+  ylimit_max <- max(max(ordered_data), abs(min(ordered_data))) + 0.5
   ylimit_min <- -ylimit_max
 
   plot <- plot(standard_normal_quantiles, ordered_data,
@@ -46,7 +46,7 @@ QQplot <- function(data) {
                main = "Q-Q Plot",
                xlim = c(xlimit_min, xlimit_max),
                ylim = c(ylimit_min, ylimit_max))
-
   plot <- plot + abline(h = 0, v = 0, col = "gray", lty = 2)
+
   return (plot)
 }

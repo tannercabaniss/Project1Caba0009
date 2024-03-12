@@ -1,5 +1,8 @@
 #' Bivariate Normality Check
 #'
+#' This function evaluates a bivariate data set for normality by observing the predicted and actual probabilities of
+#' containment within a predetermined contour of constant density.
+#'
 #' @param data 2D input matrix or data frame containing bivariate numerical data
 #' @param prob The probability used in determining the chi-sq value for degrees of freedom = 2.
 #'
@@ -36,7 +39,7 @@ biNormCheck <- function(data, prob) {
 
   observations_inside <- 0
   for (i in 1:total_observations) {
-    x_minus_xbar_i <- matrix(data[i,], nrow=2)
+    x_minus_xbar_i <- x_minus_xbar[i,]
     if ((t(x_minus_xbar_i) %*% inv_cov_mat %*% x_minus_xbar_i) <= chi_sq_value) {
       observations_inside <- observations_inside + 1
     }
