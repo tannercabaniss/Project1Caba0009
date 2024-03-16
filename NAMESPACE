@@ -2,10 +2,12 @@
 
 export(QQplot)
 export(biNormCheck)
+export(detectOutliers)
 export(mvNormCheck)
 export(rQ)
 export(uniNormCheck)
 importFrom(graphics,abline)
+importFrom(grid,unit)
 importFrom(stats,cov)
 importFrom(stats,qchisq)
 importFrom(stats,qnorm)

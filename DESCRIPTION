@@ -13,5 +13,9 @@ RoxygenNote: 7.3.0
 Suggests: 
     testthat (>= 3.0.0),
     rlang,
-    ggplot2
+    ggplot2,
+    knitr,
+    rmarkdown,
+    gridExtra
 Config/testthat/edition: 3
+VignetteBuilder: knitr
