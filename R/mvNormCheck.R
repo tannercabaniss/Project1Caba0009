@@ -31,7 +31,7 @@ mvNormCheck <- function(data) {
   }
 
   xbar <- colMeans(data)
-  x_minus_xbar <- data - xbar
+  x_minus_xbar <- sweep(data, 2, xbar, "-")
   cov_data <- cov(data)
   inv_cov_data <- solve(cov_data)
   sq_gen_dist <- vector(mode="numeric", length=dim(data)[1])

@@ -18,12 +18,94 @@ knitr::opts_chunk$set(
 library(Project1Caba0009)
 ```
 
-```{r, fig.align='center', fig.height=10, fig.width=10}
-vec1 <- rexp(1000, rate=2.0)
-vec2 <- rnorm(1000)
-vec3 <- rnorm(1000)
-vec4 <- rnorm(1000)
-data <- data.frame(V1=vec1, V2=vec2, V3=vec3, V4=vec4)
-detectOutliers(data)
+# Introduction
+Project 1 asked us to perform a variety of tasks including function creating, an example problem, and finally packaging the resulting files as a single deliverable. There were 7 functions created which will be utilized below for determining normality in univariate, bivariate, and multivariate data. Some of these functions simply provided true or false feedback where as others give diagnostic plots such as QQ and rQ plots. Further, the detectOutliers function aids the inquisitor in identifying values which may be causing non normality in the examined data set.
+
+# Example Problem
+We were tasked with using the created functions to solve an example problem from a provided data set. The data set is called T4_6 and can be found in the data sub directory in this package. Documentation for the data set is also provided.
+
+## Part A
+This part asks us to examine each of the ordinal variables (columns 1-5) for normality. We will utilize the uniNormCheck() function to accomplish this.
+
+```{r}
+data <- T4_6
+normality_list <- list()
+for (i in 1:5) {
+  column_name <- names(data)[i]
+  normality <- uniNormCheck(data[,i])
+  normality_list[[column_name]] <- normality
+}
+print(normality_list)
 ```
+
+While this initial test reveled univariate normality for all variables, this test is heuristic and not perfectly accurate. To get a better idea of the normality of the data, let us create some QQ and rQ plots.
+
+```{r, fig.align='center', fig.height=5, fig.width=5}
+data <- T4_6
+cat("\n")
+for (i in 1:5) {
+  cat("QQ plot of", names(data)[i], "\n")
+  QQplot(data[,i])
+  cat("rQ value for", names(data)[i], "\n")
+  print(rQ(data[,i]))
+}
+```
+
+While we observe the data is mostly normal, we can see from the rQ values that Indep, Supp, and Leader are fringe cases for normality given their lower rQ values.
+
+## Part B
+Examine the data for multivariate normality. We will accomplish this using the mvNormCheck() function.
+
+```{r, fig.align='center', fig.height=8, fig.width=8}
+data <- T4_6
+mvNormCheck(data[,1:5])
+```
+
+The data mostly aligns with the line of slope 1 emanating from the origin shown in red. However, there are some points which could benefit from transformation given their departure from this line.
+
+## Part C
+In order to identify which columns would benefit from a transformation, we can try to detect which data columns have outliers using the detectOutliers() function.
+
+```{r, fig.align='center', fig.height=10, fig.width=10}
+data <- T4_6
+detectOutliers(data[,1:5])
+```
+
+As we can see there are not many evident outliers (only 1 in the Benev and Leader columns respectively). However, we are still getting disconcerting results from the Chi-Square plot. So let us try a different approach. Let us look at the bivariate normality between pairs of the data column.
+
+```{r, fig.align='center', fig.height=4, fig.width=4}
+data <- T4_6
+for (i in 1:4) {
+  for (j in (i+1):5) {
+    cat("Bivariate normality check for columns:", colnames(data)[i], "and", colnames(data)[j], "\n")
+    print(biNormCheck(data[,c(i,j)]))
+  }
+}
+```
+
+Now, we can see more clearly the issues with normality. Let's transform the troublesome varialbes using our own version of MASS::boxcox() function called boxiestCoxiest().
+
+```{r, fig.align='center', fig.height=6, fig.width=6}
+data <- T4_6
+transformed_Indep <- boxiestCoxiest(data["Indep"])
+transformed_Supp <- boxiestCoxiest(data["Supp"])
+transformed_Benev <- boxiestCoxiest(data["Benev"])
+transformed_Conform <- boxiestCoxiest(data["Conform"])
+transformed_Leader <- boxiestCoxiest(data["Leader"])
+```
+
+Now we replace the original Benev and Leader columns with their transformed variations and rerun the mvNormCheck to look at the new augmented data's normality.
+
+```{r, fig.align='center', fig.height=6, fig.width=6}
+transformed_data <- data.frame(
+  Indep = transformed_Indep,
+  Supp = transformed_Supp,
+  Benev = data["Benev"],
+  Conform = data["Conform"],
+  Leader = transformed_Leader
+)
+mvNormCheck(transformed_data[,1:5])
+```
+
+Now we can see some slight improvements in the Chi-Square plot. The outliers still exist as the box cox transformation works on the data as a whole and not specifically to outliers. However, overall, the data looks much more normal.
 

@@ -8,7 +8,7 @@
 #' @return a dotplot for each varibles, a scatter plot for each pair of variables, standardized values, and a chi-square plot
 #' @export
 #' @importFrom grid unit
-#' @importFrom stats cov
+#' @importFrom stats cov var
 #'
 #' @examples
 #' vec1 <- rnorm(50)
@@ -44,26 +44,24 @@ detectOutliers <- function(data) {
     dotsize <- min(100 / dim(data)[1], 1)
     p <- ggplot2::ggplot(data, ggplot2::aes_string(x = colnames(data)[i])) +
       ggplot2::geom_dotplot(binwidth = binwidth, dotsize = dotsize) +
-      ggplot2::labs(title = paste("Dot plot -", colnames(data)[i])) +
+      ggplot2::labs(title = paste(colnames(data)[i])) +
       ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 
     dot_plots[[i]] <- p
   }
 
-  # Create scatter plots for each pair of variables
   scatter_plots <- list()
   for (i in 1:dim(data)[2]) {
     for (j in 1:dim(data)[2]) {
       p <- ggplot2::ggplot(data, ggplot2::aes_string(x = colnames(data)[i], y = colnames(data)[j])) +
         ggplot2::geom_point() +
-        ggplot2::labs(title = paste("Scatter plot -", colnames(data)[i], "and", colnames(data)[j])) +
+        ggplot2::labs(title = paste(colnames(data)[i], "and", colnames(data)[j])) +
         ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 
       scatter_plots[[length(scatter_plots) + 1]] <- p
     }
   }
 
-  # Arrange plots in a grid
   ncols_dot <- floor(sqrt(dim(data)[2]))
   nrows_dot <- ceiling(dim(data)[2] / ncols_dot)
 
@@ -98,6 +96,15 @@ detectOutliers <- function(data) {
 
   colnames(z_mat) <- colnames(data)
 
-  cat("Standardized Values (Z) matrix\n")
-  print(z_mat)
+  count_outliers <- function(x) {
+    sum(x > 3 | x < -3)
+  }
+
+  outlier_counts <- apply(z_mat, 2, count_outliers)
+
+  cat("Number of outliers (z values > 3 or < -3) for each column:\n")
+  print(outlier_counts)
+
+  chi_sq_plot <- mvNormCheck(data)
+  print(chi_sq_plot)
 }

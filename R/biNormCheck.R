@@ -15,7 +15,7 @@
 #' vec2 <- rnorm(100)
 #' data <- data.frame(x=vec1, y=vec2)
 #' biNormCheck(data, prob=0.5)
-biNormCheck <- function(data, prob) {
+biNormCheck <- function(data, prob=0.5) {
   data <- as.matrix(data)
   if (dim(data)[2] != 2) {
     rlang::abort("The data provided is not bivariate")
@@ -33,7 +33,7 @@ biNormCheck <- function(data, prob) {
   xbar_vec <- colMeans(data)
   x_minus_xbar <- data - xbar_vec
   cov_mat <- cov(data)
-  inv_cov_mat <- solve(cov_mat)
+  inv_cov_mat <- MASS::ginv(cov_mat)
 
   total_observations <- dim(data)[1]
 

@@ -4,7 +4,7 @@
 \alias{biNormCheck}
 \title{Bivariate Normality Check}
 \usage{
-biNormCheck(data, prob)
+biNormCheck(data, prob = 0.5)
 }
 \arguments{
 \item{data}{2D input matrix or data frame containing bivariate numerical data}
